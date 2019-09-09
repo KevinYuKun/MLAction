@@ -3,7 +3,10 @@ from math import log2
 import numpy as np
 import copy
 import operator
-
+from c3.treePlot import *
+from c3.tree import  *
+import os
+import pickle
 '''
     计算根节点信息熵(总体分类结果)
     return base entropy, 总体的分类label
@@ -136,6 +139,22 @@ def createTree(dataset,labels):
     return myTree
 
 
+'''
+    序列化决策树并储存
+'''
+def storeTree(inputTree, filename):
+    fw = open(filename,'wb')
+    pickle.dump(inputTree,fw)
+    print('储存在'+os.getcwd() + '/'+filename)
+    fw.close()
+
+def grabTree(filename):
+    with open(filename,'rb') as fw:
+        return pickle.load(fw)
+
+
+
+
 ''' 
 test data
 '''
@@ -144,4 +163,16 @@ feature_labels = ['no surfacing','flippers']
 # print(calEnt(dataset))
 # ent,lab = calEnt(dataset)
 # print(cal_information_gain(dataset,ent,lab))
-print(createTree(dataset,feature_labels))
+
+# 只要返回dict形式的树即可
+tree = createTree(dataset,feature_labels)
+# 存储
+# storeTree(tree,'decisionTree.txt')
+myTree = grabTree('decisionTree.txt')
+# print(myTree)
+
+# tree['no surfacing'][3] = 'maybe'
+# print(tree)
+# createPlot(tree)
+#
+# print(classify(tree,['no surfacing','flippers'],[1,0]))
